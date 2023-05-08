@@ -1,4 +1,4 @@
-import { LightningElement, api, wire } from "lwc";
+import { LightningElement, api } from "lwc";
 import ID_FIELD from "@salesforce/schema/ServiceAppointment.Id";
 import WORK_TYPE_FIELD from "@salesforce/schema/ServiceAppointment.WorkTypeId";
 import SCHED_END_FIELD from "@salesforce/schema/ServiceAppointment.SchedEndTime";
@@ -15,7 +15,7 @@ export default class MobileAppointmentBookingSettingsContainer extends Lightning
   recommendedScore = 80;
   _serviceAppointmentId;
 
-  @api operatingHours = "Israel OH";
+  @api operatingHours = "Gold Appointments Calendar";
   @api schedulingPolicy = "forAA";
 
   @api schedulingHorizonUnit = "Months";
@@ -33,7 +33,6 @@ export default class MobileAppointmentBookingSettingsContainer extends Lightning
     return this._serviceAppointmentId;
   }
 
-  useDefaultFields = true;
   currentAppointmentDefaultFieldNames = [
     ID_FIELD,
     WORK_TYPE_FIELD,

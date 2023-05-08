@@ -8,10 +8,11 @@ export default class MobileAppointmentBookingResourceAssignment extends Lightnin
   @api userName = "";
   @api selecteddate;
   @api isExcluded;
+  @api showMobileWorkerChoice;
   @api excludedMsg =
-    this.LABELS.Appointment_ReBooking_cant_select_Mobile_Worker_excluded;
+    this.LABELS.Reschedule_Appointment_cant_select_Mobile_Worker_excluded;
   resourceAssignmentTitle =
-    this.LABELS.Appointment_ReBooking_Mobile_Worker_radio_title;
+    this.LABELS.Reschedule_Appointment_Mobile_Worker_radio_title;
 
   @api get showExcludedMsg() {
     return this.isExcluded;
@@ -20,13 +21,16 @@ export default class MobileAppointmentBookingResourceAssignment extends Lightnin
   get options() {
     return [
       {
-        label: `${this.LABELS.Appointment_ReBooking_Mobile_Worker_radio_assignToMe_lable} (${this.userName})`,
+        label: `${
+          this.LABELS
+            .Reschedule_Appointment_Mobile_Worker_radio_assignToMe_lable
+        } (${this.userName || " "})`,
         value: "ASSIGN_TO_ME"
       },
       {
         label:
           this.LABELS
-            .Appointment_ReBooking_Mobile_Worker_radio_assignToAnyAvailable_lable,
+            .Reschedule_Appointment_Mobile_Worker_radio_assignToAnyAvailable_lable,
         value: "ASSIGN_TO_ANY_AVIALABLE"
       }
     ];

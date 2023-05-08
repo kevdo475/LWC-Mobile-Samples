@@ -28,30 +28,35 @@ export default class MobileAppointmentBookingSlotsContainer extends LightningEle
   lastDayOfTheWeek;
   firstSlotDate;
   @api hideNonAvailableAppointments;
+  _previousSelectedSlot;
+  displayNoSlotsMsg;
+  _showMobileWorkerChoice;
+  noSlotsBody;
+  @api recommendedScore;
 
   MONTHNAME = [
-    this.LABELS.Appointment_ReBooking_MonthName_January,
-    this.LABELS.Appointment_ReBooking_MonthName_February,
-    this.LABELS.Appointment_ReBooking_MonthName_March,
-    this.LABELS.Appointment_ReBooking_MonthName_April,
-    this.LABELS.Appointment_ReBooking_MonthName_May,
-    this.LABELS.Appointment_ReBooking_MonthName_June,
-    this.LABELS.Appointment_ReBooking_MonthName_July,
-    this.LABELS.Appointment_ReBooking_MonthName_August,
-    this.LABELS.Appointment_ReBooking_MonthName_September,
-    this.LABELS.Appointment_ReBooking_MonthName_October,
-    this.LABELS.Appointment_ReBooking_MonthName_November,
-    this.LABELS.Appointment_ReBooking_MonthName_December
+    this.LABELS.Reschedule_Appointment_MonthName_January,
+    this.LABELS.Reschedule_Appointment_MonthName_February,
+    this.LABELS.Reschedule_Appointment_MonthName_March,
+    this.LABELS.Reschedule_Appointment_MonthName_April,
+    this.LABELS.Reschedule_Appointment_MonthName_May,
+    this.LABELS.Reschedule_Appointment_MonthName_June,
+    this.LABELS.Reschedule_Appointment_MonthName_July,
+    this.LABELS.Reschedule_Appointment_MonthName_August,
+    this.LABELS.Reschedule_Appointment_MonthName_September,
+    this.LABELS.Reschedule_Appointment_MonthName_October,
+    this.LABELS.Reschedule_Appointment_MonthName_November,
+    this.LABELS.Reschedule_Appointment_MonthName_December
   ];
 
   DAYNAME = [
-    this.LABELS.Appointment_ReBooking_WeekDayLong_Sunday,
-    this.LABELS.Appointment_ReBooking_WeekDayLong_Monday,
-    this.LABELS.Appointment_ReBooking_WeekDayLong_Tuesday,
-    this.LABELS.Appointment_ReBooking_WeekDayLong_Wednesday,
-    this.LABELS.Appointment_ReBooking_WeekDayLong_Thursday,
-    this.LABELS.Appointment_ReBooking_WeekDayLong_Friday,
-    this.LABELS.Appointment_ReBooking_WeekDayLong_Saturday
+    this.LABELS.Reschedule_Appointment_WeekDayLong_Sunday,
+    this.LABELS.Reschedule_Appointment_WeekDayLong_Monday,
+    this.LABELS.Reschedule_Appointment_WeekDayLong_Tuesday,
+    this.LABELS.Reschedule_Appointment_WeekDayLong_Wednesday,
+    this.LABELS.Reschedule_Appointment_WeekDayLong_Thursday,
+    this.LABELS.Reschedule_Appointment_WeekDayLong_Friday,
+    this.LABELS.Reschedule_Appointment_WeekDayLong_Saturday
   ];
 
   @api get selectedDate() {
@@ -76,16 +81,19 @@ export default class MobileAppointmentBookingSlotsContainer extends LightningEle
   }
   set timeSlotObject(value) {
     let updatedData;
-    if (value) {
+    if (!value) {
+      this.formattedTimeSlotArray = [];
+      this.formattedRecommendedSlotsArray = [];
+      this.displayNoSlotsMsg = true;
+    } else {
       this.lockScrolling();
-      this.updateSlotData(value);
+      if (value.length > 0) {
+        this.updateSlotData(value);
+      }
       updatedData = Object.values(
         this.slotsData[this.slotsData.currentAssignmentMethodRef]
       );
       this.handleTimeSlotUpdateEvent(updatedData);
-    } else {
-      this.formattedTimeSlotArray = [];
-      this.formattedRecommendedSlotsArray = [];
     }
   }
 
@@ -126,7 +134,6 @@ export default class MobileAppointmentBookingSlotsContainer extends LightningEle
 
   set maxValidDate(value) {
     if (value) {
-      console.log("Max valid date is : " + value);
       this.maxValidCalendarDate = value;
     }
   }
@@ -140,6 +147,13 @@ export default class MobileAppointmentBookingSlotsContainer extends LightningEle
     this._pageTitle = value;
   }
 
+  @api get showMobileWorkerChoice() {
+    return this._showMobileWorkerChoice;
+  }
+  set showMobileWorkerChoice(value) {
+    this._showMobileWorkerChoice = value;
+  }
+
   constructor() {
     super();
 
@@ -148,6 +162,7 @@ export default class MobileAppointmentBookingSlotsContainer extends LightningEle
       slotsForAllMobileWorkers: {},
       currentAssignmentMethodRef: "slotsForCurrentMobileWorker"
     };
+    this.displayNoSlotsMsg = true;
   }
 
   handleTimeSlotTitle() {
@@ -220,7 +235,7 @@ export default class MobileAppointmentBookingSlotsContainer extends LightningEle
             timeDateArray["fullValue"] = timeSlotArray[k].dateTime;
             timeDateArray["grade"] = timeSlotArray[k].grade;
             timeDateArray["isRecomended"] =
-              timeSlotArray[k].grade > 80 ? true : false;
+              timeSlotArray[k].grade > this.recommendedScore ? true : false;
             tempArray.push(timeDateArray);
           }
         }
@@ -242,7 +257,7 @@ export default class MobileAppointmentBookingSlotsContainer extends LightningEle
       " " +
       date.getDate();
     if (date.setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0)) {
-      title = title + " , " + this.LABELS.Appointment_ReBooking_today_text;
+      title = title + " , " + this.LABELS.Reschedule_Appointment_today_text;
     }
     return title;
   }
@@ -262,6 +277,11 @@ export default class MobileAppointmentBookingSlotsContainer extends LightningEle
     this.formattedRecommendedSlotsArray = this.filterRecommededSlots(
       this.formattedTimeSlotArray
     );
+    if (this.formattedTimeSlotArray && this.formattedTimeSlotArray.length > 0) {
+      this.displayNoSlotsMsg = false;
+    } else {
+      this.displayNoSlotsMsg = true;
+    }
     this.allowScrolling();
     this.callCustomEvent("updateNonAvailableDates", this.nonAvailableDateArray);
   }
@@ -316,7 +336,6 @@ export default class MobileAppointmentBookingSlotsContainer extends LightningEle
     this.nonAvailableDateArray = Array.from(
       new Set(this.nonAvailableDateArray)
     );
-
     return newSortedArray;
   }
 
@@ -463,7 +482,10 @@ export default class MobileAppointmentBookingSlotsContainer extends LightningEle
         var elementToShowLocation = elementToShow.getBoundingClientRect(); //gets the current user view
         var offset = elementToShowLocation.top - 145; //gets the difference between user view and element view minus the calendar height
         if (!this.isWeekUpdated) {
-          elementToShow.classList.add("headerBold");
+          elementToShow.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
         }
         this.previousElement = elementToShow;
       } catch (e) {
@@ -477,6 +499,7 @@ export default class MobileAppointmentBookingSlotsContainer extends LightningEle
     let slotsData;
     this.formattedTimeSlotArray = [];
     this.formattedRecommendedSlotsArray = [];
+    this.displayNoSlotsMsg = true;
 
     if (updatedAssignmentMethod == assignmentMethod.ASSIGN_TO_ME) {
       this.slotsData.currentAssignmentMethodRef = "slotsForCurrentMobileWorker";
