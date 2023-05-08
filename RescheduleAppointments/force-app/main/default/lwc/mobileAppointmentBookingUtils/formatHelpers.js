@@ -1,62 +1,29 @@
 import customLabels from "./constantsLabels";
 
 const MONTHNAME = [
-  customLabels.Appointment_ReBooking_MonthName_January,
-  customLabels.Appointment_ReBooking_MonthName_February,
-  customLabels.Appointment_ReBooking_MonthName_March,
-  customLabels.Appointment_ReBooking_MonthName_April,
-  customLabels.Appointment_ReBooking_MonthName_May,
-  customLabels.Appointment_ReBooking_MonthName_June,
-  customLabels.Appointment_ReBooking_MonthName_July,
-  customLabels.Appointment_ReBooking_MonthName_August,
-  customLabels.Appointment_ReBooking_MonthName_September,
-  customLabels.Appointment_ReBooking_MonthName_October,
-  customLabels.Appointment_ReBooking_MonthName_November,
-  customLabels.Appointment_ReBooking_MonthName_December
+  customLabels.Reschedule_Appointment_MonthName_January,
+  customLabels.Reschedule_Appointment_MonthName_February,
+  customLabels.Reschedule_Appointment_MonthName_March,
+  customLabels.Reschedule_Appointment_MonthName_April,
+  customLabels.Reschedule_Appointment_MonthName_May,
+  customLabels.Reschedule_Appointment_MonthName_June,
+  customLabels.Reschedule_Appointment_MonthName_July,
+  customLabels.Reschedule_Appointment_MonthName_August,
+  customLabels.Reschedule_Appointment_MonthName_September,
+  customLabels.Reschedule_Appointment_MonthName_October,
+  customLabels.Reschedule_Appointment_MonthName_November,
+  customLabels.Reschedule_Appointment_MonthName_December
 ];
 
 const DAYNAME = [
-  customLabels.Appointment_ReBooking_WeekDayLong_Sunday,
-  customLabels.Appointment_ReBooking_WeekDayLong_Monday,
-  customLabels.Appointment_ReBooking_WeekDayLong_Tuesday,
-  customLabels.Appointment_ReBooking_WeekDayLong_Wednesday,
-  customLabels.Appointment_ReBooking_WeekDayLong_Thursday,
-  customLabels.Appointment_ReBooking_WeekDayLong_Friday,
-  customLabels.Appointment_ReBooking_WeekDayLong_Saturday
+  customLabels.Reschedule_Appointment_WeekDayLong_Sunday,
+  customLabels.Reschedule_Appointment_WeekDayLong_Monday,
+  customLabels.Reschedule_Appointment_WeekDayLong_Tuesday,
+  customLabels.Reschedule_Appointment_WeekDayLong_Wednesday,
+  customLabels.Reschedule_Appointment_WeekDayLong_Thursday,
+  customLabels.Reschedule_Appointment_WeekDayLong_Friday,
+  customLabels.Reschedule_Appointment_WeekDayLong_Saturday
 ];
-
-const formatAppointmentDateandHourRange = (startDate, endDate) => {
-  let start = new Date(startDate);
-  let end = new Date(endDate);
-  let formatedStr =
-    DAYNAME[start.getDay()] +
-    "," +
-    "  " +
-    MONTHNAME[start.getMonth()] +
-    " " +
-    start.getDate() +
-    ", " +
-    getFormattedTime(start) +
-    " - ";
-
-  if (start.getDate() == end.getDate()) {
-    //Assumes same day
-    formatedStr = formatedStr + getFormattedTime(end);
-  } else {
-    //If more than one day
-    formatedStr =
-      formatedStr +
-      DAYNAME[end.getDay()] +
-      "," +
-      "  " +
-      MONTHNAME[end.getMonth()] +
-      " " +
-      end.getDate() +
-      ", " +
-      getFormattedTime(end);
-  }
-  return formatedStr;
-};
 
 const getFormattedTime = (date) => {
   var hours = date.getHours();
@@ -69,12 +36,65 @@ const getFormattedTime = (date) => {
   return hours + ":" + minutes + " " + ampm;
 };
 
-const convertDateUTCtoLocal = (date) => {
-  if (date && date !== "null") {
-    return new Date(date.replace(/ /g, "T") + ".000Z");
-  } else {
-    return "";
-  }
+const formatDateWithTime = (date) => {
+  let d = new Date(date);
+  let formatedStr =
+    DAYNAME[d.getDay()] +
+    "," +
+    "  " +
+    MONTHNAME[d.getMonth()] +
+    " " +
+    d.getDate() +
+    ", " +
+    getFormattedTime(d);
+
+  return formatedStr;
 };
 
-export { formatAppointmentDateandHourRange, convertDateUTCtoLocal };
+const formatAppointmentDateandHourRange = (startDate, endDate) => {
+  let formatedStr = "";
+  if (startDate && endDate) {
+    let start = new Date(startDate);
+    let end = new Date(endDate);
+    formatedStr = formatDateWithTime(startDate);
+    if (start.getDate() === end.getDate()) {
+      //Assumes same day
+      if (!(start.getTime() === end.getTime())) {
+        formatedStr = formatedStr + " - " + getFormattedTime(end);
+      }
+    } else {
+      //If more than one day
+      formatedStr = formatedStr + +" - " + formatDateWithTime(end);
+    }
+  } else if (startDate) {
+    formatedStr = formatDateWithTime(startDate);
+  }
+
+  return formatedStr;
+};
+
+const convertDateUTCtoLocal = (date) => {
+  if (date && date !== "null") {
+    let utcDate = new Date(date);
+    utcDate.setMinutes(utcDate.getMinutes() - utcDate.getTimezoneOffset());
+    return utcDate;
+  }
+  return "";
+};
+
+const getDateWithoutTime = (date) => {
+  var d;
+  if (typeof val === "string") {
+    d = new Date(date.replace(/-/g, "/")); // replace method is use to support time in safari
+  } else {
+    d = new Date(date);
+  }
+  d.setHours(0, 0, 0, 0);
+  return d;
+};
+
+export {
+  formatAppointmentDateandHourRange,
+  convertDateUTCtoLocal,
+  getDateWithoutTime
+};

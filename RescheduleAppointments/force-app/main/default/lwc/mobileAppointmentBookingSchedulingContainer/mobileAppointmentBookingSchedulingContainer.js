@@ -1,13 +1,8 @@
-import { LightningElement, api, wire, track } from "lwc";
+import { LightningElement, api, track } from "lwc";
 
 import convertTimeToOtherTimeZone from "@salesforce/apex/AppointmentController.convertTimeToOtherTimeZone";
 import customLabels from "./labels";
-import getUserName from "@salesforce/apex/AppointmentController.getUserName";
 
-const assignmentMethod = {
-  ASSIGN_TO_ME: "assignToMe",
-  ASSIGN_TO_ANY_AVIALABLE: "assignToAnyAvailable"
-};
 export default class MobileAppointmentBookingSchedulingContainer extends LightningElement {
   guestToken;
   schedulePolicyId;
@@ -47,17 +42,18 @@ export default class MobileAppointmentBookingSchedulingContainer extends Lightni
   _showExactArrivalTime;
   @api worktypeDisplayname;
   _currentAssignmentMethod;
-  assignToName;
+  @api assignToName;
   @api userName;
-  @api showAssignmentMethodToggle;
   @api isExcluded;
+  @api showMobileWorkerChoice;
+  @api minValidDate;
 
   show_confirmBtnLayout = false;
-  _recommendedScore;
+  @api recommendedScore;
   @api allAppointmentsTitle =
-    this.LABELS.Appointment_ReBooking_all_available_appointments;
+    this.LABELS.Reschedule_Appointment_all_available_appointments;
   @api recommendedAppointmentsTitle =
-    this.LABELS.Appointment_ReBooking_recommended_appointments;
+    this.LABELS.Reschedule_Appointment_recommended_appointments;
   timeSlotObjectFilteredByGrades;
   @api userId;
 
@@ -173,33 +169,21 @@ export default class MobileAppointmentBookingSchedulingContainer extends Lightni
   }
 
   @api
-  get recommendedScore() {
-    return this._recommendedScore;
-  }
-
-  set recommendedScore(value) {
-    this._recommendedScore = value;
-  }
-  @api
   get currentAssignmentMethod() {
     return this._currentAssignmentMethod;
   }
 
   set currentAssignmentMethod(value) {
     this._currentAssignmentMethod = value;
-
-    if (this.userName) {
-      this.setAssigNameByAssignMethod();
-    }
   }
 
   onDateSelected(event) {
     this.selectedDate = event.detail.date;
     console.log("Selected date in main class : " + this.selectedDate);
-    var staticElement = this.template.querySelector('[data-id="calendar"]');
-    var top = staticElement.getBoundingClientRect().top;
+    let staticElement = this.template.querySelector('[data-id="calendar"]');
+    let top = staticElement.getBoundingClientRect().top;
     console.log("The element is : " + top);
-    const returnValue = this.template
+    this.template
       .querySelector("c-mobile-appointment-booking-slots-container")
       .onPositionUpdated(top);
   }
@@ -207,7 +191,7 @@ export default class MobileAppointmentBookingSchedulingContainer extends Lightni
   onWeekChangeEvent(event) {
     this.selectedDate = event.detail.date;
     console.log("On week change called");
-    const returnValue = this.template
+    this.template
       .querySelector("c-mobile-appointment-booking-slots-container")
       .onWeekUpdated(this.selectedDate);
     this.runApexQueryToChangeEarlistStartDate(this.selectedDate);
@@ -258,33 +242,25 @@ export default class MobileAppointmentBookingSchedulingContainer extends Lightni
         break;
       }
       default: {
+        // ignore
       }
     }
   }
 
-  handleBackButton() {
-    this.handleButtonClickEvent("showConfirmScreen");
-  }
-  // pass date to main/parent class
-  handleButtonClickEvent(buttonEvent) {
-    const customEvent = new CustomEvent("eventname", {
-      detail: { buttonName: buttonEvent }
-    });
-    this.dispatchEvent(customEvent);
-  }
-
   getHeadlineDate() {
     const dateOptions = { weekday: "long", month: "long", day: "numeric" };
-    if (this.ArrivalWindowStartTime == "null" || this.showExactArrivalTime) {
-      var startDate = this.convertDateUTCtoLocal(this.SchedStartTime);
-      var endDate = this.convertDateUTCtoLocal(this.SchedEndTime);
+    let startDate;
+    let endDate;
+    if (this.ArrivalWindowStartTime === "null" || this.showExactArrivalTime) {
+      startDate = this.convertDateUTCtoLocal(this.SchedStartTime);
+      endDate = this.convertDateUTCtoLocal(this.SchedEndTime);
     } else {
-      var startDate = this.convertDateUTCtoLocal(this.ArrivalWindowStartTime);
-      var endDate = this.convertDateUTCtoLocal(this.ArrivalWindowEndTime);
+      startDate = this.convertDateUTCtoLocal(this.ArrivalWindowStartTime);
+      endDate = this.convertDateUTCtoLocal(this.ArrivalWindowEndTime);
     }
     if (startDate && endDate) {
-      var dateLong = startDate.toLocaleDateString(undefined, dateOptions);
-      var time =
+      let dateLong = startDate.toLocaleDateString(undefined, dateOptions);
+      let time =
         this.getFormattedTimeFromDate(startDate) +
         " - " +
         this.getFormattedTimeFromDate(endDate);
@@ -299,9 +275,8 @@ export default class MobileAppointmentBookingSchedulingContainer extends Lightni
   convertDateUTCtoLocal(date) {
     if (date && date !== "null") {
       return new Date(date.replace(/ /g, "T") + ".000Z");
-    } else {
-      return "";
     }
+    return "";
   }
 
   getFormattedTimeFromDate(date) {
@@ -329,7 +304,6 @@ export default class MobileAppointmentBookingSchedulingContainer extends Lightni
       }
     });
     this.dispatchEvent(customEvent);
-    this.show_confirmBtnLayout = false;
   }
 
   runApexQueryToChangeEarlistStartDate(selectedDate) {
@@ -380,35 +354,15 @@ export default class MobileAppointmentBookingSchedulingContainer extends Lightni
     };
   }
 
-  @wire(getUserName, { userId: "$userId" })
-  wireUserName({ error, data }) {
-    if (data) {
-      this.userName = data;
-      this.error = undefined;
-      console.log("UserName from getUserName :" + data);
-
-      this.setAssigNameByAssignMethod();
-    } else if (error) {
-      console.log("error in getUserName: " + JSON.stringify(error));
-    }
-  }
-
-  setAssigNameByAssignMethod() {
-    if (this._currentAssignmentMethod == assignmentMethod.ASSIGN_TO_ME) {
-      this.assignToName =
-        this.LABELS.Appointment_ReBooking_assigned_to_you.replace(
-          "{0}",
-          this.userName
-        );
-    } else {
-      this.assignToName =
-        this.LABELS.Appointment_ReBooking_assigned_to_any_available_worker;
-    }
-  }
-
   @api clearSlotsAfterAssignmentMethodChange(updatedAssignmentMethod) {
     this.template
       .querySelector("c-mobile-appointment-booking-slots-container")
       .clearSlotsAfterAssignmentMethodChange(updatedAssignmentMethod);
+  }
+
+  @api handleSchedulingResponse(response) {
+    this.template
+      .querySelector("c-mobile-appointment-booking-reschedule-appointment")
+      .handleSchedulingResponse(response);
   }
 }

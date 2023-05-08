@@ -1,0 +1,17 @@
+import Reschedule_Appointment_new_appointment_msg from "@salesforce/label/c.Reschedule_Appointment_new_appointment_msg";
+import Reschedule_Appointment_accept_new_appointment_button from "@salesforce/label/c.Reschedule_Appointment_accept_new_appointment_button";
+import Reschedule_Appointment_bottom_sheet_success from "@salesforce/label/c.Reschedule_Appointment_bottom_sheet_success";
+import Reschedule_Appointment_bottom_sheet_failure_title from "@salesforce/label/c.Reschedule_Appointment_bottom_sheet_failure_title";
+import Reschedule_Appointment_bottom_sheet_failure_body from "@salesforce/label/c.Reschedule_Appointment_bottom_sheet_failure_body";
+import Reschedule_Appointment_OK from "@salesforce/label/c.Reschedule_Appointment_OK";
+
+const customLabels = {
+  Reschedule_Appointment_new_appointment_msg,
+  Reschedule_Appointment_accept_new_appointment_button,
+  Reschedule_Appointment_bottom_sheet_success,
+  Reschedule_Appointment_bottom_sheet_failure_title,
+  Reschedule_Appointment_bottom_sheet_failure_body,
+  Reschedule_Appointment_OK
+};
+
+export default customLabels;
