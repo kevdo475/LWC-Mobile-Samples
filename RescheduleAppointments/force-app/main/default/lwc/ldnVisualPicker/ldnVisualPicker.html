@@ -1,0 +1,38 @@
+<template>
+  <template if:true={items}>
+    <fieldset class="slds-form-element">
+      <template if:true={showLegend}>
+        <legend class="slds-form-element__legend slds-form-element__label">
+          {numberOfItems}
+        </legend>
+      </template>
+      <div class="slds-form-element__control">
+        <template iterator:item={items}>
+          <div
+            key={item.value.id}
+            class="slds-visual-picker visual-picker_vertical"
+          >
+            <input
+              type={type}
+              id={item.value.id}
+              value={item.value.id}
+              name="visual-picker"
+              onclick={handleClick}
+            />
+            <label for={item.value.id}>
+              <c-ldn-tile
+                first={item.first}
+                last={item.last}
+                title={item.value.title}
+                sub-title={item.value.subTitle}
+                action={item.value.action}
+                fields={item.value.fields}
+                featured-value={item.value.featuredValue}
+              ></c-ldn-tile>
+            </label>
+          </div>
+        </template>
+      </div>
+    </fieldset>
+  </template>
+</template>

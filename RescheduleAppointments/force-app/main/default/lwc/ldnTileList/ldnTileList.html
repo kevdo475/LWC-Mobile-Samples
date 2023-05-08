@@ -1,0 +1,24 @@
+<template>
+  <template if:true={items}>
+    <template if:true={showLegend}>
+      <legend class="slds-form-element__legend slds-form-element__label">
+        {numberOfItems}
+      </legend>
+    </template>
+    <template iterator:item={items}>
+      <c-ldn-tile
+        first={item.first}
+        last={item.last}
+        key={item.value.id}
+        id={item.value.id}
+        title={item.value.title}
+        sub-title={item.value.subTitle}
+        action={item.value.action}
+        fields={item.value.fields}
+        featured-value={item.value.featuredValue}
+        onactionclick={handleActionClick}
+        onfieldvaluechange={handleFieldValueChange}
+      ></c-ldn-tile>
+    </template>
+  </template>
+</template>

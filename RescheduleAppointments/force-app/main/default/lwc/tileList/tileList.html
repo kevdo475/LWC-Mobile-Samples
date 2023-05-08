@@ -1,0 +1,56 @@
+<template>
+  <legend class="slds-form-element__legend slds-form-element__label">
+    {numberOfRecords}
+  </legend>
+  <div>
+    <template if:true={records}>
+      <template iterator:record={records}>
+        <c-tile
+          key={record.value.id}
+          record-id={record.value.id}
+          item={record.value}
+          title={title}
+          first={record.first}
+          last={record.last}
+          fields={fields}
+          labels={fieldLabels}
+          onitemselected={handleItemSelected}
+          ontilevaluechange={handleTileValueChange}
+          featured-value={featuredValue}
+          enable-featured-value-edit={enableFeatureValueEdit}
+          button-name={actionName}
+        >
+          <!-- pass in to slot -->
+          <!-- <div class="slds-form-element">
+                        <div class="slds-grid slds-wrap slds-grid_vertical-align-end slds-grid_align-spread">
+                            <div class="slds-size_1-of-1">
+                                <label class="slds-form-element__label" for={record.value.id}>
+                                    Quantity Received</label>
+                            </div>
+                            <div class="slds-grid slds-size_1-of-2">
+                                <div class="slds-col slds-m-right_xx-small">
+                                    <lightning-button-icon icon-name="utility:dash"></lightning-button-icon>
+                                </div>
+                                <div class="slds-col slds-m-right_xx-small">
+                                    <div class="slds-form-element__control">
+                                        <input type="number" id={record.value.id} required="" class="slds-input" />
+                                    </div>
+                                </div>
+                                <div class="slds-col">
+                                    <lightning-button-icon icon-name="utility:add"></lightning-button-icon>
+                                </div>
+                            </div>
+                            <div class="slds-col">
+                                <div class="">
+                                    <lightning-button variant="brand-outline" label="Receive" title="Receive">
+                                    </lightning-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+          <!-- pass in to slot -->
+        </c-tile>
+      </template>
+    </template>
+  </div>
+</template>

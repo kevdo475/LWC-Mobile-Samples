@@ -1,0 +1,59 @@
+<template>
+  <div
+    class="slds-visual-picker slds-visual-picker_vertical visual-picker_vertical"
+  >
+    <input
+      type={type}
+      id={title}
+      value={recordId}
+      name={object}
+      onclick={handleClick}
+    />
+    <label for={title}>
+      <span class={visualPickerFigureClass}>
+        <span>
+          <span class="slds-text-heading_medium slds-m-bottom_x-small"
+            >{title}</span
+          >
+          <!-- <span class="slds-text-title">Some optional item description to help the user better
+                                understand what this option is about.</span> -->
+          <span class="slds-tile__detail">
+            <dl class="slds-list_horizontal slds-wrap">
+              <template if:true={fields}>
+                <template for:each={fields} for:item="field">
+                  <dt
+                    class="slds-item_label slds-text-color_weak slds-truncate"
+                    title={field.fieldName}
+                    key={field.fieldName}
+                  >
+                    {field.fieldName}
+                  </dt>
+                  <dd
+                    class="slds-item_detail"
+                    title={field.value}
+                    key={field.value}
+                  >
+                    {field.value}
+                  </dd>
+                </template>
+              </template>
+            </dl>
+          </span>
+        </span>
+      </span>
+      <lightning-icon
+        class="slds-icon_container slds-visual-picker__text-check icon-check-top-helper"
+        variant="inverse"
+        size="x-small"
+        icon-name="utility:check"
+        aria-label="checkmark"
+        aria-hidden="true"
+      ></lightning-icon>
+      <span class="slds-icon_container slds-visual-picker__text-check">
+        <!-- <svg class="slds-icon slds-icon_x-small" aria-label="checkmark" aria-hidden="true">
+                    <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                </svg> -->
+      </span>
+    </label>
+  </div>
+</template>

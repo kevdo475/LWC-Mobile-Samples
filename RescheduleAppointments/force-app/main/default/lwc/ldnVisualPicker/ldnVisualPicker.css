@@ -1,0 +1,11 @@
+.visual-picker_vertical {
+  width: 100%;
+  margin-top: 0;
+  margin-left: 0;
+}
+.visual-picker_vertical:first-child .visual-picker__figure {
+  border-radius: 10px 10px 0px 0px;
+}
+.visual-picker_vertical:last-child .visual-picker__figure {
+  border-radius: 0px 0px 10px 10px;
+}

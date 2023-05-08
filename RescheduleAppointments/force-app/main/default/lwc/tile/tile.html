@@ -1,0 +1,113 @@
+<template>
+  <div class="slds-visual-picker_vertical visual-picker_vertical">
+    <div class={visualPickerFigureClass}>
+      <span>
+        <span class="slds-text-heading_medium slds-m-bottom_x-small"
+          >{title}</span
+        >
+        <span class="slds-tile__detail">
+          <dl class="slds-list_horizontal slds-wrap">
+            <template if:true={fields}>
+              <template for:each={fields} for:item="field">
+                <dt
+                  class="slds-item_label slds-text-color_weak slds-truncate"
+                  title={field.value.fieldName}
+                  key={field.key}
+                >
+                  {field.value.fieldName}
+                </dt>
+                <dd
+                  class="slds-item_detail"
+                  title={field.value.value}
+                  key={field.key}
+                >
+                  {field.value.value}
+                </dd>
+              </template>
+            </template>
+          </dl>
+        </span>
+
+        <slot></slot>
+
+        <div class="slds-form-element">
+          <div class="slds-grid slds-wrap slds-grid_vertical-align-end">
+            <template if:true={featuredValue}>
+              <template if:true={enableFeaturedValueEdit}>
+                <div class="slds-size_1-of-1">
+                  <label class="slds-form-element__label" for={recordId}>
+                    {_featuredValue.fieldName}</label
+                  >
+                </div>
+                <div class="slds-grid slds-size_1-of-2">
+                  <div class="slds-col slds-m-right_xx-small">
+                    <lightning-button-icon
+                      name="subtract"
+                      icon-name="utility:dash"
+                      alternative-text="subtract"
+                      onclick={handleValueChange}
+                    ></lightning-button-icon>
+                  </div>
+                  <div class="slds-col slds-m-right_xx-small">
+                    <div class="slds-form-element__control">
+                      <!-- <input type="number" id={recordId} required="" value={_featuredValue.value} min="0"
+                                                class="slds-input" oninput={handleValueChange} onchange={handleValueChange} /> -->
+                      <lightning-input
+                        label="label"
+                        value={featuredValue}
+                        type="number"
+                        min="0"
+                        variant="label-hidden"
+                        onchange={handleValueChange}
+                      ></lightning-input>
+                    </div>
+                  </div>
+                  <div class="slds-col">
+                    <lightning-button-icon
+                      name="add"
+                      icon-name="utility:add"
+                      alternative-text="add"
+                      onclick={handleValueChange}
+                    ></lightning-button-icon>
+                  </div>
+                </div>
+              </template>
+              <template if:false={enableFeaturedValueEdit}>
+                <div class="slds-text-heading_small">{featuredValue}</div>
+              </template>
+            </template>
+            <template if:true={buttonName}>
+              <div class="slds-col_bump-left">
+                <div class="">
+                  <lightning-button
+                    variant="brand-outline"
+                    label={buttonName}
+                    title={buttonName}
+                    onclick={handleButtonClick}
+                  ></lightning-button>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- <lightning-layout class="slds-p-top_x-small">
+                    <lightning-layout-item>
+                        <lightning-button-icon icon-name="utility:add"></lightning-button-icon>
+                    </lightning-layout-item>
+                    <lightning-layout-item>
+                        <lightning-button-icon icon-name="utility:add"></lightning-button-icon>
+                    </lightning-layout-item>
+                </lightning-layout> -->
+      </span>
+    </div>
+  </div>
+
+  <!-- <div class="slds-form-element">
+        <label class="slds-form-element__label" for="text-input-id-93">
+            <abbr class="slds-required" title="required">* </abbr>Input Label</label>
+        <div class="slds-form-element__control">
+            <input type="text" id="text-input-id-93" placeholder="Placeholder text…" required="" class="slds-input" />
+        </div>
+    </div> -->
+</template>

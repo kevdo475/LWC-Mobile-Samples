@@ -1,0 +1,40 @@
+<template>
+  <template if:true={label}>
+    <label class="slds-form-element__label" for="input"> {label}</label>
+  </template>
+  <div class="slds-grid">
+    <div class="slds-col slds-m-right_xx-small">
+      <lightning-button-icon
+        name="subtract"
+        icon-name="utility:dash"
+        alternative-text="subtract"
+        disabled={isSubtractDisabled}
+        onclick={handleValueChange}
+      ></lightning-button-icon>
+    </div>
+    <div class="slds-col slds-m-right_xx-small">
+      <div class="slds-form-element__control">
+        <lightning-input
+          id="input"
+          label="input"
+          disabled={disabled}
+          value={value}
+          type="number"
+          min={min}
+          max={max}
+          variant="label-hidden"
+          onblur={handleValueChange}
+        ></lightning-input>
+      </div>
+    </div>
+    <div class="slds-col">
+      <lightning-button-icon
+        name="add"
+        icon-name="utility:add"
+        alternative-text="add"
+        disabled={isAddDisabled}
+        onclick={handleValueChange}
+      ></lightning-button-icon>
+    </div>
+  </div>
+</template>

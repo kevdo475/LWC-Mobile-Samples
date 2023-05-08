@@ -1,0 +1,31 @@
+.visual-picker_vertical {
+  width: 100%;
+}
+
+.visual-picker_vertical:first-child .visual-picker__figure {
+  border-radius: 10px 10px 0px 0px;
+}
+.visual-picker_vertical:last-child .visual-picker__figure {
+  border-radius: 0px 0px 10px 10px;
+}
+
+.visual-picker__figure {
+  width: 100%;
+  border-radius: 0;
+}
+
+.slds-visual-picker_vertical .slds-visual-picker__figure {
+  height: fit-content;
+}
+
+.slds-visual-picker_vertical + .slds-visual-picker_vertical {
+  margin-top: 0;
+}
+
+.visual-picker_first {
+  border-radius: 10px 10px 0px 0px;
+}
+
+.visual-picker_last {
+  border-radius: 0px 0px 10px 10px;
+}

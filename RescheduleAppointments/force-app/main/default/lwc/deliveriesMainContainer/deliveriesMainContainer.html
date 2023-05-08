@@ -1,0 +1,45 @@
+<template>
+  <div class="main-container">
+    <div class="sticky-top-container">
+      <c-ldn-navigation-bar
+        show-navigate-back={navigation.showNavigateBack}
+        show-refresh={navigation.showRefresh}
+        title={navigation.title}
+        icon-name={navigation.iconName}
+        onnavigateback={handleNavigateBack}
+        onrefresh={handleRefresh}
+      ></c-ldn-navigation-bar>
+      <template if:true={itemSelected}>
+        <c-ldn-action-card
+          actions={actions}
+          toggles={toggles}
+          onactionclick={handleConfirm}
+          ontoggle={handleToggle}
+        ></c-ldn-action-card>
+      </template>
+    </div>
+    <div class="list-container slds-p-around_small">
+      <template if:false={itemSelected}>
+        <c-ldn-visual-picker
+          item-name="Deliveries"
+          show-legend="true"
+          items={deliveries}
+          onitemselected={handleItemSelected}
+        ></c-ldn-visual-picker>
+      </template>
+      <template if:true={itemSelected}>
+        <c-ldn-tile-list
+          item-name="Product Transfers"
+          show-legend="true"
+          items={relatedProductTransfers}
+          onfieldvaluechange={handleFieldValueChange}
+        ></c-ldn-tile-list>
+      </template>
+    </div>
+    <template if:true={isLoading}>
+      <div class="slds-spinner_container slds-is-fixed">
+        <lightning-spinner alternative-text="loading"></lightning-spinner>
+      </div>
+    </template>
+  </div>
+</template>

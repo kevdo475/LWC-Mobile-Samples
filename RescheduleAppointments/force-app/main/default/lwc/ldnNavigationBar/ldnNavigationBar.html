@@ -1,0 +1,45 @@
+<template>
+  <div class="slds-card slds-size_full">
+    <div
+      class="slds-grid slds-grid_align-spread slds-p-around_small slds-size_full"
+    >
+      <div class="slds-col slds-size_1-of-8">
+        <template if:true={showNavigateBack}>
+          <lightning-button-icon
+            name="navigateback"
+            icon-name="utility:chevronleft"
+            variant="bare"
+            size="large"
+            onclick={handleNavigateBack}
+          ></lightning-button-icon>
+        </template>
+      </div>
+      <div class="slds-col slds-align_absolute-center">
+        <div class="slds-media slds-media_center slds-has-flexi-truncate">
+          <template if:true={iconName}>
+            <div class="slds-media__figure">
+              <lightning-icon
+                size="small"
+                icon-name={iconName}
+              ></lightning-icon>
+            </div>
+          </template>
+          <div class="slds-media__body">
+            <h2 class="slds-card__header-title">{title}</h2>
+          </div>
+        </div>
+      </div>
+      <div class="slds-col slds-size_1-of-8">
+        <template if:true={showRefresh}>
+          <lightning-button-icon
+            name="navigateback"
+            icon-name="utility:refresh"
+            variant="bare"
+            size="large"
+            onclick={handleRefresh}
+          ></lightning-button-icon>
+        </template>
+      </div>
+    </div>
+  </div>
+</template>

@@ -1,0 +1,62 @@
+<template>
+  <div class="slds-card slds-scrollable_none">
+    <div class="slds-grid slds-wrap slds-gutters_xx-small slds-p-around_medium">
+      <template if:true={fullSizeActions}>
+        <template iterator:action={fullSizeActions}>
+          <div
+            key={action.value.name}
+            class="slds-col slds-size_full slds-p-bottom_x-small"
+          >
+            <lightning-button
+              class="button_stretch"
+              variant={action.value.variant}
+              label={action.value.label}
+              name={action.value.name}
+              disabled={action.value.disabled}
+              onclick={handleActionClick}
+            >
+            </lightning-button>
+          </div>
+        </template>
+      </template>
+      <!-- <div class="slds-col slds-size_1-of-3">
+                                <lightning-button class="button_stretch" variant="success" label="Confirm" name="Confirm">
+                                </lightning-button>
+                            </div> -->
+      <div class="slds-form-element slds-size_full slds-p-top_small">
+        <template if:true={toggles}>
+          <template iterator:toggle={toggles}>
+            <div
+              key={toggle.value.name}
+              class="slds-checkbox_toggle slds-grid slds-grid_align-spread slds-p-top_x-small"
+            >
+              <span class="slds-col">
+                <span class="slds-form-element__label slds-m-bottom_none"
+                  >{toggle.value.label}</span
+                >
+              </span>
+              <span class="slds-col">
+                <label class="slds-checkbox_toggle">
+                  <input
+                    type="checkbox"
+                    name={toggle.value.name}
+                    checked={checked}
+                    aria-describedby={toggle.value.name}
+                    onchange={handleToggleChange}
+                  />
+                  <span
+                    id={toggle.value.name}
+                    class="slds-checkbox_faux_container"
+                    aria-live="assertive"
+                  >
+                    <span class="slds-checkbox_faux"></span>
+                  </span>
+                </label>
+              </span>
+            </div>
+          </template>
+        </template>
+      </div>
+    </div>
+  </div>
+</template>

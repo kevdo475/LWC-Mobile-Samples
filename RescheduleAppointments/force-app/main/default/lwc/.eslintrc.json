@@ -1,5 +1,9 @@
 {
-  "extends": ["@salesforce/eslint-config-lwc/recommended", "prettier"],
+  "extends": [
+    "@salesforce/eslint-config-lwc/recommended",
+    "prettier",
+    "plugin:@salesforce/lwc-graph-analyzer/recommended"
+  ],
   "overrides": [
     {
       "files": ["*.test.js"],

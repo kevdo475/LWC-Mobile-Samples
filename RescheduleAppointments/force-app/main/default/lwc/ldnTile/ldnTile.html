@@ -1,0 +1,100 @@
+<template>
+  <div class="slds-visual-picker_vertical visual-picker_vertical">
+    <div class={tileClass}>
+      <span class="slds-size_full">
+        <span class="slds-float_right">
+          <lightning-icon
+            icon-name="action:approval"
+            size="xx-small"
+          ></lightning-icon>
+        </span>
+        <span class="slds-text-heading_medium slds-m-bottom_x-small"
+          >{title}</span
+        >
+        <span class="slds-tile__detail">
+          <template if:true={subTitle}>
+            <p class="slds-m-vertical_small">{subTitle}</p>
+          </template>
+          <dl class="slds-list_horizontal slds-wrap">
+            <template if:true={fields}>
+              <template for:each={fields} for:item="field">
+                <dt
+                  class="slds-item_label slds-text-color_weak slds-truncate"
+                  title={field.fieldName}
+                  key={field.key}
+                >
+                  {field.fieldName}
+                </dt>
+                <dd
+                  class="slds-item_detail"
+                  title={field.value}
+                  key={field.key}
+                >
+                  {field.value}
+                </dd>
+              </template>
+            </template>
+          </dl>
+        </span>
+
+        <slot></slot>
+
+        <div class="slds-form-element">
+          <div
+            class="slds-grid slds-wrap slds-grid_vertical-align-end slds-m-top_x-small"
+          >
+            <template if:true={featuredValue}>
+              <div class="slds-grid slds-size_1-of-2">
+                <template if:true={featuredValue.editable}>
+                  <c-ldn-input-counter
+                    label={featuredValue.fieldName}
+                    value={featuredValue.value}
+                    min={featuredValue.min}
+                    max={featuredValue.max}
+                    step={featuredValue.step}
+                    onchange={handleInputCounterChange}
+                  ></c-ldn-input-counter>
+                </template>
+                <template if:false={featuredValue.editable}>
+                  <div class="slds-text-heading_small">
+                    {featuredValue.value}
+                  </div>
+                </template>
+              </div>
+            </template>
+            <template if:true={action}>
+              <div class="slds-col_bump-left">
+                <div class="">
+                  <lightning-button
+                    variant="brand-outline"
+                    label={action.label}
+                    title={action.name}
+                    disabled={action.disabled}
+                    onclick={handleActionClick}
+                  ></lightning-button>
+                </div>
+              </div>
+            </template>
+            <template if:true={badges}>
+              <div
+                class="slds-grid slds-wrap slds-size_full slds-p-top_x-small"
+              >
+                <template for:each={badges} for:item="badge">
+                  <span
+                    key={badge.key}
+                    class="slds-col slds-m-right_xx-small slds-m-top_x-small"
+                  >
+                    <lightning-badge
+                      class={badge.class}
+                      label={badge.label}
+                    ></lightning-badge>
+                  </span>
+                </template>
+              </div>
+            </template>
+          </div>
+        </div>
+      </span>
+    </div>
+  </div>
+</template>
