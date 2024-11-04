@@ -23,7 +23,10 @@
     },
     "dependencies": {},
     "engines": {
-        "node": ">=18"
+        "node": ">=20"
+    },
+    "volta": {
+        "node": "20.18.0"
     },
     "workspaces": [
         "projects/*",
